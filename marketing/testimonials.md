@@ -42,6 +42,7 @@ Use these for website, App Store descriptions, and marketing materials.
 | "I purchased Saneclip because I **loved the free version**. You do **amazing work**." | Glenn C. | Feb 2026 | Email |
 | "Thanks for the **great SaneClip app**." | Peter L. | Feb 2026 | Email |
 | "That is awesome, thank you. **Even more awesome, thank you again**." | Glenn C. | Feb 2026 | Email |
+| "The app and setup are **extremely polished and professional, the best on the market by far**." | Glenn C. | Feb 2026 | Email |
 
 ### First Impressions
 
