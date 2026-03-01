@@ -101,17 +101,10 @@ final class StatusBarController: StatusBarControllerProtocol {
             }
         }
 
-        // First-run onboarding reliability: hard-anchor main/separator near
-        // Control Center until onboarding is completed.
-        // This prevents stale machine-specific placement state from shoving the
-        // SaneBar icon to the far-left side on install/setup.
-        if Self.shouldForceAnchorNearControlCenterOnLaunch() {
-            Self.forceMainAndSeparatorAnchorSeed()
-        } else {
-            // Seed positions BEFORE creating items (position pre-seeding)
-            // Position 0 = rightmost (main), Position 1 = second from right (separator)
-            Self.seedPositionsIfNeeded()
-        }
+        // Do NOT pre-seed ordinal positions (0, 1) before creating items.
+        // macOS can interpret these as literal pixel X coordinates, placing
+        // items at the far left of the menu bar instead of near Control Center.
+        // Without pre-seeding, macOS auto-places new items correctly.
 
         // Create main item (rightmost, near Control Center)
         mainItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
@@ -182,7 +175,7 @@ final class StatusBarController: StatusBarControllerProtocol {
         Self.removePreferredPosition(forAutosaveName: "SaneBar_Separator_v\(oldVersion)")
         Self.removePreferredPosition(forAutosaveName: "SaneBar_AlwaysHiddenSeparator_v\(oldVersion)")
 
-        Self.seedPositionsIfNeeded()
+        // Don't re-seed ordinals — let macOS auto-place fresh items.
         if hadAlwaysHiddenSeparator {
             Self.seedAlwaysHiddenSeparatorPositionIfNeeded()
         }
@@ -339,11 +332,12 @@ final class StatusBarController: StatusBarControllerProtocol {
     /// positions for the next status-item relayout/restart.
     static func recoverStartupPositions(alwaysHiddenEnabled: Bool) {
         resetPositionsToOrdinals()
-        seedPositionsIfNeeded()
+        // Don't re-seed ordinals — clearing cached positions is sufficient.
+        // macOS will auto-place items correctly on next creation.
         if alwaysHiddenEnabled {
             seedAlwaysHiddenSeparatorPositionIfNeeded()
         }
-        logger.info("Applied startup position recovery seeds")
+        logger.info("Applied startup position recovery (cleared cached positions)")
     }
 
     // MARK: - Display-Aware Position Validation
